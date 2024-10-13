@@ -132,6 +132,45 @@
             cars.push(new CarBuilder(Math.floor(Math.random()*3),stp+n*gameDifficulty,Math.floor(Math.random()*7)+1));
         }
 
+        function OpponentCar(src, start, lane) {
+            this.src = oppCar[src];
+            this.y = start;
+            this.x = 0;
+            this.h = 0;
+            this.w = 0;
+            this.dy = 0.5;
+            this.lane = lane;
+        }
+
+        OpponentCar.prototype.draw = function() {
+            this.y += this.dy;
+            this.x = (carWCnst / 2) * (h - this.y) + (w - (carWCnst * (h - this.y))) * this.lane / 8;
+            this.w = carW - carW * carWCnst * (h - this.y) / w;
+            this.h = 1.7 * this.w / 2;
+
+            ctx.drawImage(this.src, this.x, this.y - this.h, this.w, this.h);
+            if(this.y >= h-20){
+                if(Math.abs(this.x-cx) <= carH && Math.abs(this.y-h+carH) <= carH){
+                    clearInterval(intv);
+                    setTimeout(function(){
+                        endGame();
+                    },10);
+                }
+            }
+
+            if (this.y >= h + 100) {
+                this.y = stp;
+                this.lane = Math.floor(Math.random() * 7) + 1;
+                this.dy = 0.5 + Math.random() * 0.5;
+            }
+        };
+
+        var oppCar = [_i("c2"),_i("c2"),_i("c3")];
+        var opponentCars = [];
+        for (var n = 0; n < 3; n++) { 
+            opponentCars.push(new OpponentCar(Math.floor(Math.random() * 3), stp + n * 100, Math.floor(Math.random() * 7) + 1));
+        }
+
         function rectPoints(n,ho){
             n = totalRso-n-1;
             var y1 = stp+maxH*cnst1*(Math.pow(1/ratio,n)-1);
@@ -183,6 +222,8 @@
             }
         }
 
+        draw();
+
         var cx = (w-carW)/2;
         var cl = false, cr = false;
         var car = _i("c1");
@@ -192,67 +233,6 @@
             if(cr) if(cx-50 > 0) cx-=ms;
             ctx.drawImage(car,cx,h-carH,carW,carH);
         }
-
-        var m = 0;
-
-        var speed = parseInt(localStorage.getItem("speed")) || 20;
-        const minSpeed = 0; 
-        const maxSpeed = 20; 
-        var intv;
-
-        document.querySelector(".carspeed").innerHTML = speed;
-
-        function startInterval() {
-            clearInterval(intv);
-            intv = setInterval(function() {
-                try {
-                    ctx.clearRect(0, 0, w, h);
-                    maxH += 0.5;
-                    changedHeight = maxH * cnst1 * (Math.pow(1 / ratio, totalRso - 1) - 1);
-                    
-                    if (changedHeight >= totalHeight) {
-                        maxH = maxHF;
-                        m++;
-                    }
-
-                    for (var n = 0; n < totalRso; n++) {
-                        rso[n] = rectPoints(n, h - totalHeight + changedHeight);
-                        rso[n][8] = (m % 2 === 0) ? (n % 2 === 0 ? "#000" : "#fff") : (n % 2 === 1 ? "#000" : "#fff");
-                    }
-                    
-                    draw();
-
-                    for (var n = 0; n < trees.length; n++) {
-                        trees[n].draw();
-                    }
-
-                    for (var n = 0; n < cars.length; n++) {
-                        cars[n].draw();
-                    }
-
-                    drawCar();
-                } catch (err) {
-                    console.error("Animation error:", err);
-                }
-            }, speed);
-        }
-
-        startInterval();
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'a') { 
-                speed = Math.min(speed + 2, maxSpeed);
-            } else if (event.key === 'd') { 
-                speed = Math.max(speed - 2, minSpeed);
-            }
-            
-            localStorage.setItem("speed", speed);
-            console.log("Current speed:", speed);
-            document.querySelector(".carspeed").innerHTML = speed;
-            startInterval();
-        });
-
-        draw();
 
         function getKey(e){
             e.preventDefault();
@@ -288,6 +268,69 @@
             }
         }
 
+        var m = 0;
+
+        var speed = parseInt(localStorage.getItem("speed")) || 20;
+        const minSpeed = 0; 
+        const maxSpeed = 20; 
+        var intv;
+
+        document.querySelector(".carspeed").innerHTML = speed;
+
+        function startInterval() {
+            clearInterval(intv);
+            intv = setInterval(function() {
+                try {
+                    ctx.clearRect(0, 0, w, h);
+                    maxH += 0.5;
+                    changedHeight = maxH * cnst1 * (Math.pow(1 / ratio, totalRso - 1) - 1);
+                    
+                    if (changedHeight >= totalHeight) {
+                        maxH = maxHF;
+                        m++;
+                    }
+
+                    for (var n = 0; n < totalRso; n++) {
+                        rso[n] = rectPoints(n, h - totalHeight + changedHeight);
+                        rso[n][8] = (m % 2 === 0) ? (n % 2 === 0 ? "#000" : "#fff") : (n % 2 === 1 ? "#000" : "#fff");
+                    }
+                    
+                    draw();
+
+                    for (var n = 0; n < trees.length; n++) {
+                        trees[n].draw();
+                    }
+
+                    for (var n = 0; n < opponentCars.length; n++) {
+                        opponentCars[n].draw();
+                    }
+
+                    for (var n = 0; n < cars.length; n++) {
+                        cars[n].draw();
+                    }
+
+                    drawCar();
+                } catch (err) {
+                    console.error("Animation error:", err);
+                }
+            }, speed);
+        }
+
+        startInterval();
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'a') { 
+                speed = Math.min(speed + 2, maxSpeed);
+            } else if (event.key === 'd') { 
+                speed = Math.max(speed - 2, minSpeed);
+            }
+            
+            localStorage.setItem("speed", speed);
+            console.log("Current speed:", speed);
+            document.querySelector(".carspeed").innerHTML = speed;
+            startInterval();
+        });
+
         if(window.DeviceMotionEvent){
             window.removeEventListener("devicemotion",driveCar)
             window.addEventListener("devicemotion",driveCar,false)
@@ -297,6 +340,7 @@
 })();
 
 function endGame() {
+    // speed = 10;
     console.log("Game Over. All cleared, level reset to 1.");
-    window.location.href = 'result.html';
+    window.location.href = '../HTML/result.html';
 }
