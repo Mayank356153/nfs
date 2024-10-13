@@ -12,6 +12,8 @@
     c.width = w;
 
     var ctx = c.getContext("2d");
+    var level = 1;
+    var acceleration = 0.2;
 
     function loadGame(){
         "use strict";
@@ -125,14 +127,14 @@
             }
         }
 
-        var carSrc = [_i("c1"),_i("c1"),_i("c1")];
+        var carSrc = [_i("c1"),_i("c2"),_i("c3")];
 
         var cars = [];
         for(var n = 0; n < ((h*0.7+100)/gameDifficulty); n++){
             cars.push(new CarBuilder(Math.floor(Math.random()*3),stp+n*gameDifficulty,Math.floor(Math.random()*7)+1));
         }
 
-        function OpponentCar(src, start, lane) {
+        function OppositeCar(src, start, lane) {
             this.src = oppCar[src];
             this.y = start;
             this.x = 0;
@@ -142,7 +144,7 @@
             this.lane = lane;
         }
 
-        OpponentCar.prototype.draw = function() {
+        OppositeCar.prototype.draw = function() {
             this.y += this.dy;
             this.x = (carWCnst / 2) * (h - this.y) + (w - (carWCnst * (h - this.y))) * this.lane / 8;
             this.w = carW - carW * carWCnst * (h - this.y) / w;
@@ -166,10 +168,50 @@
         };
 
         var oppCar = [_i("c2"),_i("c2"),_i("c3")];
-        var opponentCars = [];
+        var oppositeCars= [];
         for (var n = 0; n < 3; n++) { 
-            opponentCars.push(new OpponentCar(Math.floor(Math.random() * 3), stp + n * 100, Math.floor(Math.random() * 7) + 1));
+            oppositeCars.push(new OppositeCar(Math.floor(Math.random() * 3), stp + n * 100, Math.floor(Math.random() * 7) + 1));
         }
+
+        function levelCar(src, start, lane) {
+            this.src = levelCars[src];
+            this.y = start;
+            this.x = 0;
+            this.h = 0;
+            this.w = 0;
+            this.dy = acceleration;
+            this.lane = lane; 
+        }
+
+        levelCar.prototype.draw = function() {
+            this.y += acceleration;
+            this.x = (carWCnst / 2) * (h - this.y) + (w - (carWCnst * (h - this.y))) * this.lane / 8;
+            this.w = carW - carW * carWCnst * (h - this.y) / w;
+            this.h = 1.7 * this.w / 2;
+    
+            ctx.drawImage(this.src, this.x, this.y - this.h, this.w, this.h);
+
+            if (this.y >= h - 20) {
+                if (Math.abs(this.x - cx) <= carH && Math.abs(this.y - (h - carH)) <= carH) {
+                    clearInterval(intv);
+                    setTimeout(function() {
+                        endGame();
+                    }, 10);
+                }
+            }
+
+            if (this.y >= h + 100) {
+                this.y = stp;
+                this.h = 0;
+                this.w = 0;
+                this.lane = Math.floor(Math.random() * 7) + 1; 
+                this.dy = 0.5;
+            }
+        };
+
+        var levelCars = [_i("l1"), _i("l1"), _i("l1")];
+        var levelOfCar =[];
+        levelOfCar.push(new levelCar(0, stp, Math.floor(Math.random() * 7)));
 
         function rectPoints(n,ho){
             n = totalRso-n-1;
@@ -301,13 +343,15 @@
                         trees[n].draw();
                     }
 
-                    for (var n = 0; n < opponentCars.length; n++) {
-                        opponentCars[n].draw();
-                    }
+                    // for (var n = 0; n < oppositeCars.length; n++) {
+                    //     oppositeCars[n].draw();
+                    // }
 
                     for (var n = 0; n < cars.length; n++) {
                         cars[n].draw();
                     }
+
+                    levelOfCar[level-1].draw();
 
                     drawCar();
                 } catch (err) {
@@ -340,7 +384,7 @@
 })();
 
 function endGame() {
-    // speed = 10;
+    speed = 10;
     console.log("Game Over. All cleared, level reset to 1.");
     window.location.href = '../HTML/result.html';
 }
