@@ -1,6 +1,4 @@
-function play(){
-    localStorage.setItem("level",1);
-    localStorage.setItem("bossSpeed",0.2);
-    window.location.href ="../HTML/game.html";
-    localStorage.setItem("check",true);
-}
+document.addEventListener('keypress',function(event){
+    if(event.key=='Enter')
+        window.location.href='../HTML/start.html';
+});
