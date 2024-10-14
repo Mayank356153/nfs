@@ -3,19 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Working</h1>
-    <button onClick = "restartGame()">Restart</button>
-    <button onClick = "quitGame()">Quit</button>
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <style>
+        .resutl{
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap:3rem;
+        }
+        h1{
+            text-align: center;
+        }
+
+    </style>
+    <title>Race</title>
+  </head>
+    <div class = "resutl">
+        <h1>Working</h1>
+        <h2>Level Achived: <span class="score">0</span></h2>
+        <div>
+            <button onClick = "restartGame()">Restart</button>
+            <button onClick = "quitGame()">Quti</button>
+        </div>
+    </div>
+
 </body>
 <script>
+    var level = localStorage.getItem("level");
+    document.querySelector(".score").innerHTML = level;
     function restartGame(){
         window.location.href = 'game.html';
     }
     function quitGame(){
-        window.location.href = '';
+
+        window.location.href = 'start.html';
+
     }
 </script>
 </html>

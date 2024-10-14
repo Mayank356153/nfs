@@ -3,16 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <style>
+        body{
+            overflow:hidden;
+            background-color: black;
+        }
+        h1{
+            color:red;
+            font-size: 6rem;
+        }
+        .win{
+            position:absolute;
+            transform: rotate(-7deg);
+            left:12rem;
+            top:16rem;
+            height:16rem;
+            border-radius: 6px;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            animation-name: blow;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+        }
+        button{
+            position:absolute;
+            left:45rem;
+            top:38rem;
+            height:3rem;
+            width:10rem;
+            font-size: 1.8rem;
+            background-color: blue;
+            border-radius:5px;
+            animation-name: flow;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes flow{
+            0%{
+                scale:1.5;
+            }50%{
+                scale:1;
+            }100%{
+                scale:1.5;
+            }
+        }
+        @keyframes blow{
+            0%{
+                opacity: 0;
+            }50%{
+                opacity: 1;
+            }100%{
+                opacity: 0;
+            }
+        }
+    </style>
     <title>Document</title>
 </head>
 <body>
-    <button onClick="levelUp()">Let's Go</button>
+    
+    <div class="win">
+        <h1>You defeated the <span class="name">name</span>!!</h1>
+    </div>
+    <button onClick="levelUp()">Next Level</button>
 </body>
 <script>
-    localStorage.setItem("bossSpeed",0.09);
-    localStorage.setItem("level",2);
-    var speed = localStorage.getItem("bossSpeed");
-    var level = localStorage.getItem("level");
+    var speed = Number(localStorage.getItem("bossSpeed"));
+    var level = Number(localStorage.getItem("level"));
+    
+    if( level === 1) level = 2;
+    else if( level === 2) level = 3;
+
+    if( level === 2){
+        document.querySelector(".name").innerHTML = "Ronnie";
+    }
+    else if( level === 3){
+        document.querySelector(".name").innerHTML = "Bull";
+    }else {
+        document.querySelector(".name").innerHTML = "Razor";
+    }
+
+    if( level === 2){
+        localStorage.setItem("bossSpeed",0.2);
+    }
+
+    if( level === 3){
+        localStorage.setItem("bossSpeed",0.15);
+    }
+    console.log(level);
+    localStorage.setItem("level",level);
     localStorage.setItem("check",false);
     console.log(speed,level);
     function levelUp(){

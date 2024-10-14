@@ -12,11 +12,17 @@
     c.width = w;
 
     var ctx = c.getContext("2d");
-    var level = 1;
-    var acceleration = 0.2;
+    var level;
+    var acceleration;
 
     function loadGame(){
         "use strict";
+
+        var check = localStorage.getItem("check");
+        level = Number(localStorage.getItem("level"));
+        acceleration = Number(localStorage.getItem("bossSpeed"));
+        console.log(typeof(level),typeof(acceleration));
+        console.log(level,acceleration);
 
         var roadWidth = 4*w/36;
         var roadTop = h-h*0.7;
@@ -206,14 +212,20 @@
                 this.w = 0;
                 this.lane = Math.floor(Math.random() * 7) + 1; 
                 this.dy = 0.5;
+                levelIncrease();
+                if( level == 3){
+                    endGame();
+                }
             }
         };
 
-        var levelCars = [_i("l1"), _i("l1"), _i("l1")];
+        var levelCars = [_i("l1"), _i("l2"), _i("l3")];
         var levelOfCar =[];
-        levelOfCar.push(new levelCar(0, stp, Math.floor(Math.random() * 7)));
+        for( var n = 0;n<3;n++){
+            levelOfCar.push(new levelCar(level-1, stp, Math.floor(Math.random() * 7)));
+        }
 
-        function rectPoints(n,ho){
+        function rectPoints(n){
             n = totalRso-n-1;
             var y1 = stp+maxH*cnst1*(Math.pow(1/ratio,n)-1);
             var x1 = roadLeft-roadConstant*(y1-stp);
@@ -268,7 +280,7 @@
 
         var cx = (w-carW)/2;
         var cl = false, cr = false;
-        var car = _i("c1");
+        var car = _i("m1");
         var ms = 3*w/560;
         function drawCar(){
             if(cl) if(cx+carW+50 < w) cx+=ms;
@@ -343,9 +355,9 @@
                         trees[n].draw();
                     }
 
-                    // for (var n = 0; n < oppositeCars.length; n++) {
-                    //     oppositeCars[n].draw();
-                    // }
+                    for (var n = 0; n < oppositeCars.length; n++) {
+                        oppositeCars[n].draw();
+                    }
 
                     for (var n = 0; n < cars.length; n++) {
                         cars[n].draw();
@@ -387,4 +399,8 @@ function endGame() {
     speed = 10;
     console.log("Game Over. All cleared, level reset to 1.");
     window.location.href = '../HTML/result.html';
+}
+
+function levelIncrease(){
+    window.location.href = '../HTML/level.html';
 }

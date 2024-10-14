@@ -64,6 +64,6 @@
 }
 
 .speedometer{
-    z-index:6;
-    color:white;
+    z-index:10;
+    color:black;
 }
