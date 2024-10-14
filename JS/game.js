@@ -196,6 +196,16 @@
             this.h = 1.7 * this.w / 2;
     
             ctx.drawImage(this.src, this.x, this.y - this.h, this.w, this.h);
+            ctx.beginPath();
+            ctx.arc(this.x + this.w / 2, this.y + this.h / 4, this.w / 4, 0, Math.PI * 2);
+            ctx.fillStyle = "white";
+            ctx.fill();
+
+            ctx.fillStyle = "black"; 
+            ctx.font = `${this.w / 6}px Arial`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("enemy", this.x + this.w / 2, this.y + this.h / 4);
 
             if (this.y >= h - 20) {
                 if (Math.abs(this.x - cx) <= carH && Math.abs(this.y - (h - carH)) <= carH) {
