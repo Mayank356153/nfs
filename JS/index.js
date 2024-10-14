@@ -11,4 +11,3 @@ document.addEventListener('keypress',function (run){
     window.location.href ="../HTML/game.html";
 });
 
-
