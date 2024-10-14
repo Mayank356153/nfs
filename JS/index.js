@@ -7,6 +7,5 @@ localStorage.setItem("check",true);
 console.log()
 function play(){
     window.location.href ="../HTML/game.html";
-    
 }
 
