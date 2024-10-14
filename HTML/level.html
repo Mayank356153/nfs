@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onClick="levelUp()">Let's Go</button>
+</body>
+<script>
+    localStorage.setItem("bossSpeed",0.09);
+    localStorage.setItem("level",2);
+    var speed = localStorage.getItem("bossSpeed");
+    var level = localStorage.getItem("level");
+    localStorage.setItem("check",false);
+    console.log(speed,level);
+    function levelUp(){
+        window.location.href = 'game.html';
+    }
+</script>
+</html>
