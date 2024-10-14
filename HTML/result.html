@@ -5,12 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
     <style>
+        body{
+            margin: 0;
+            background-image: url('../assets/car-bmw-m3-bmw-race-cars-wallpaper-preview.jpg') ; 
+            background-size: cover; 
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            
+           
+        }
         .resutl{
             display:flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             gap:3rem;
+            color: white;
         }
         h1{
             text-align: center;
@@ -24,7 +35,7 @@
         <h2>Level Achived: <span class="score">0</span></h2>
         <div>
             <button onClick = "restartGame()">Restart</button>
-            <button onClick = "quitGame()">Quti</button>
+            <button onClick = "quitGame()">Quit</button>
         </div>
     </div>
 
