@@ -1,7 +1,7 @@
 localStorage.setItem("level",1);
-localStorage.setItem("bossSpeed",0.25);
-var level = localStorage.getItem("level",1);
-var acceleration = localStorage.getItem("bossSpeed",0.2);
+localStorage.setItem("bossSpeed",0.3);
+var level = localStorage.getItem("level");
+var acceleration = localStorage.getItem("bossSpeed");
 console.log(level,acceleration);
 localStorage.setItem("check",true);
 console.log()

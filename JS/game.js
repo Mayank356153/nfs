@@ -219,13 +219,13 @@
             }
         };
 
-        var levelCars = [_i("l1"), _i("l2"), _i("l1")];
+        var levelCars = [_i("l1"), _i("l2"), _i("l3")];
         var levelOfCar =[];
         for( var n = 0;n<3;n++){
             levelOfCar.push(new levelCar(level-1, stp, Math.floor(Math.random() * 7)));
         }
 
-        function rectPoints(n,ho){
+        function rectPoints(n){
             n = totalRso-n-1;
             var y1 = stp+maxH*cnst1*(Math.pow(1/ratio,n)-1);
             var x1 = roadLeft-roadConstant*(y1-stp);
@@ -280,7 +280,7 @@
 
         var cx = (w-carW)/2;
         var cl = false, cr = false;
-        var car = _i("c1");
+        var car = _i("m1");
         var ms = 3*w/560;
         function drawCar(){
             if(cl) if(cx+carW+50 < w) cx+=ms;

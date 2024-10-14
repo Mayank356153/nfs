@@ -70,18 +70,27 @@
 <script>
     var speed = Number(localStorage.getItem("bossSpeed"));
     var level = Number(localStorage.getItem("level"));
-    if( level == 1){
+    
+    if( level === 1) level = 2;
+    else if( level === 2) level = 3;
+
+    if( level === 2){
         document.querySelector(".name").innerHTML = "Ronnie";
     }
-    if( level == 1) level = 2;
-    if( level == 2) level = 3;
+    else if( level === 3){
+        document.querySelector(".name").innerHTML = "Bull";
+    }else {
+        document.querySelector(".name").innerHTML = "Razor";
+    }
+
+    if( level === 2){
+        localStorage.setItem("bossSpeed",0.2);
+    }
+
+    if( level === 3){
+        localStorage.setItem("bossSpeed",0.15);
+    }
     console.log(level);
-    if( level == 2){
-        localStorage.setItem("bossSpeed",0.17);
-    }
-    if( level == 3){
-        localStorage.setItem("bossSpeed",0.09);
-    }
     localStorage.setItem("level",level);
     localStorage.setItem("check",false);
     console.log(speed,level);
