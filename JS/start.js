@@ -6,5 +6,5 @@ console.log(level,acceleration);
 localStorage.setItem("check",true);
 console.log()
 function play(){
-    window.location.href ="../HTML/game.html";
+    window.location.href ="../HTML/enemy.html";
 }

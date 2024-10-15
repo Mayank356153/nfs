@@ -3,4 +3,3 @@ document.addEventListener('keydown', function (event) {
         window.location.href = "../HTML/start.html"; // Redirect to start page
     }
 });
-
