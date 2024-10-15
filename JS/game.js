@@ -115,7 +115,8 @@
             this.h = 1.7*this.w/3;
 
             ctx.drawImage(this.src,this.x,this.y-this.h,this.w,this.h);
-            if(this.y >= h-20){
+            if(this.y >= h-60){
+                console.log("i am in");
                 if(Math.abs(this.x-cx) <= carH && Math.abs(this.y-h+carH) <= carH){
                     clearInterval(intv);
                     setTimeout(function(){
@@ -129,15 +130,15 @@
                 this.w = 0;
                 this.left = Math.random()*3;
                 this.dy = 0.5;
-                this.lane = 0+Math.random()*7;
+                this.lane = Math.floor(Math.random() * 4) + 4;
             }
-        }
+        }  
 
         var carSrc = [_i("c1"),_i("c2"),_i("c3")];
 
         var cars = [];
         for(var n = 0; n < ((h*0.7+100)/gameDifficulty); n++){
-            cars.push(new CarBuilder(Math.floor(Math.random()*3),stp+n*gameDifficulty,Math.floor(Math.random()*7)+1));
+            cars.push(new CarBuilder(Math.floor(Math.random()*3),stp+n*gameDifficulty,Math.floor(Math.random() * 4) + 4));
         }
 
         function OppositeCar(src, start, lane) {
@@ -148,16 +149,22 @@
             this.w = 0;
             this.dy = 0.5;
             this.lane = lane;
+            this.targetLane = lane; 
+            this.laneChangeSpeed = 0.1;
+            this.safeDistance = 50;
         }
-
+        
         OppositeCar.prototype.draw = function() {
             this.y += this.dy;
-            this.x = (carWCnst / 2) * (h - this.y) + (w - (carWCnst * (h - this.y))) * this.lane / 8;
-            this.w = carW - carW * carWCnst * (h - this.y) / w;
-            this.h = 1.7 * this.w / 2;
+            for (let otherCar of oppositeCars) {
+                if (otherCar !== this && this.isColliding(otherCar)) {
+                    if (this.lane === otherCar.lane) {
+                        this.changeLane();
+                    }
+                }
+            }
 
-            ctx.drawImage(this.src, this.x, this.y - this.h, this.w, this.h);
-            if(this.y >= h-20){
+            if(this.y >= h-60){
                 if(Math.abs(this.x-cx) <= carH && Math.abs(this.y-h+carH) <= carH){
                     clearInterval(intv);
                     setTimeout(function(){
@@ -165,18 +172,65 @@
                     },10);
                 }
             }
-
+        
+            if (this.lane !== this.targetLane) {
+                this.lane = this.lane < this.targetLane ? 
+                            Math.min(this.lane + this.laneChangeSpeed, this.targetLane) : 
+                            Math.max(this.lane - this.laneChangeSpeed, this.targetLane);
+            }
+        
+            this.x = (carWCnst / 2) * (h - this.y) + (w - (carWCnst * (h - this.y))) * this.lane / 8;
+            this.w = carW - carW * carWCnst * (h - this.y) / w;
+            this.h = 1.7 * this.w / 2;
+        
+            ctx.drawImage(this.src, this.x, this.y - this.h, this.w, this.h);
+        
             if (this.y >= h + 100) {
                 this.y = stp;
-                this.lane = Math.floor(Math.random() * 7) + 1;
+                this.targetLane = Math.floor(Math.random() * 4); 
                 this.dy = 0.5 + Math.random() * 0.5;
             }
         };
-
-        var oppCar = [_i("c2"),_i("c2"),_i("c3")];
-        var oppositeCars= [];
-        for (var n = 0; n < 3; n++) { 
-            oppositeCars.push(new OppositeCar(Math.floor(Math.random() * 3), stp + n * 100, Math.floor(Math.random() * 7) + 1));
+        
+        OppositeCar.prototype.isColliding = function(otherCar) {
+            const yCollision = Math.abs(this.y - otherCar.y) < this.safeDistance;
+            const xCollision = Math.abs(this.x - otherCar.x) < (this.w + otherCar.w) / 2;
+            return yCollision && xCollision;
+        };
+        
+        OppositeCar.prototype.changeLane = function() {
+            let newLane = this.lane;
+            const preferredLane = this.lane;
+        
+            if (preferredLane > 0 && this.checkLaneAvailability(preferredLane - 1)) {
+                newLane = preferredLane - 1; 
+            }
+            else if (preferredLane < 3 && this.checkLaneAvailability(preferredLane + 1)) {
+                newLane = preferredLane + 1;
+            } else if (preferredLane > 1 && this.checkLaneAvailability(preferredLane - 2)) {
+                newLane = preferredLane - 2;
+            } else if (preferredLane < 2 && this.checkLaneAvailability(preferredLane + 2)) {
+                newLane = preferredLane + 2; 
+            }
+        
+            this.targetLane = newLane; 
+        };
+        
+        OppositeCar.prototype.checkLaneAvailability = function(lane) {
+            let count = 0;
+            for (let otherCar of oppositeCars) {
+                if (otherCar.lane === lane && Math.abs(otherCar.y - this.y) < this.safeDistance) {
+                    count++;
+                }
+            }
+            return count < 1; 
+        };
+        
+        
+        var oppCar = [_i("c2"), _i("c2"), _i("c3")];
+        var oppositeCars = [];
+        for (var n = 0; n < ((h * 0.7 + 100) / gameDifficulty); n++) {
+            oppositeCars.push(new OppositeCar(Math.floor(Math.random() * 3), stp + n * 100, Math.floor(Math.random() * 4)));
         }
 
         function levelCar(src, start, lane) {
@@ -186,36 +240,111 @@
             this.h = 0;
             this.w = 0;
             this.dy = acceleration;
-            this.lane = lane; 
+            this.lane = lane;
+            this.targetLane = lane; 
+            this.laneChangeSpeed = 0.1; 
         }
-
+    
+        function levelCar(src, start, lane) {
+            this.src = levelCars[src];
+            this.y = start;
+            this.x = 0;
+            this.h = 0;
+            this.w = 0;
+            this.dy = acceleration;
+            this.lane = lane;
+        }
+        
         levelCar.prototype.draw = function() {
-            this.y += acceleration;
+            this.y += this.dy; 
+            this.updatePosition(); 
+            this.renderCar();
+        
+            this.checkCollisions();
+        
+            this.checkGameOver();
+
+            this.resetPositionIfNeeded();
+        };
+        
+        levelCar.prototype.updatePosition = function() {
             this.x = (carWCnst / 2) * (h - this.y) + (w - (carWCnst * (h - this.y))) * this.lane / 8;
             this.w = carW - carW * carWCnst * (h - this.y) / w;
             this.h = 1.7 * this.w / 2;
-    
+        };
+        
+        levelCar.prototype.renderCar = function() {
             ctx.drawImage(this.src, this.x, this.y - this.h, this.w, this.h);
+            ctx.fillStyle = "white";
             ctx.beginPath();
             ctx.arc(this.x + this.w / 2, this.y + this.h / 4, this.w / 4, 0, Math.PI * 2);
-            ctx.fillStyle = "white";
             ctx.fill();
-
-            ctx.fillStyle = "black"; 
+            ctx.fillStyle = "black";
             ctx.font = `${this.w / 6}px Arial`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText("enemy", this.x + this.w / 2, this.y + this.h / 4);
-
-            if (this.y >= h - 20) {
-                if (Math.abs(this.x - cx) <= carH && Math.abs(this.y - (h - carH)) <= carH) {
-                    clearInterval(intv);
-                    setTimeout(function() {
-                        endGame();
-                    }, 10);
+        };
+        
+        levelCar.prototype.checkCollisions = function() {
+            for (let car of [...cars, ...oppositeCars]) {
+                // Check for collision
+                if (this.isColliding(car)) {
+                    this.changeLane();
+                    break;
                 }
             }
-
+        };
+        
+        levelCar.prototype.isColliding = function(otherCar) {
+            return (
+                this.y < otherCar.y + otherCar.h &&
+                this.y + this.h > otherCar.y &&
+                this.x < otherCar.x + otherCar.w &&
+                this.x + this.w > otherCar.x
+            );
+        };
+        
+        levelCar.prototype.changeLane = function() {
+            const preferredLane = this.lane; 
+        
+            const potentialLanes = [
+                preferredLane - 1, 
+                preferredLane + 1, 
+                preferredLane - 2, 
+                preferredLane + 2  
+            ];
+        
+            for (let lane of potentialLanes) {
+                if (this.checkLaneAvailability(lane)) {
+                    this.lane = lane; 
+                    return; 
+                }
+            }
+        };
+        
+        levelCar.prototype.checkLaneAvailability = function(lane) {
+            if (lane < 0 || lane > 7) return false;
+        
+            return ![...cars, ...oppositeCars].some(car => car.lane === lane && car.y < h);
+        };
+        
+        
+        levelCar.prototype.checkLaneAvailability = function(lane) {
+            if (lane < 0 || lane > 7) return false; 
+            return ![...cars, ...oppositeCars].some(car => car.lane === lane && car.y < h);
+        };
+        
+        levelCar.prototype.checkGameOver = function() {
+            if (this.y >= h - 20 && Math.abs(this.x - cx) <= carH) {
+                clearInterval(intv);
+                setTimeout(function() {
+                    endGame();
+                }, 10);
+            }
+        };
+        
+        levelCar.prototype.resetPositionIfNeeded = function() {
             if (this.y >= h + 100) {
                 this.y = stp;
                 this.h = 0;
@@ -223,11 +352,13 @@
                 this.lane = Math.floor(Math.random() * 7) + 1; 
                 this.dy = 0.5;
                 levelIncrease();
-                if( level == 3){
+                if (level === 3) {
                     endGame();
                 }
             }
         };
+        
+        
 
         var levelCars = [_i("l1"), _i("l2"), _i("l3")];
         var levelOfCar =[];
@@ -320,17 +451,6 @@
         document.body.removeEventListener("keyup",getKeyEnd);
         document.body.addEventListener("keydown",getKey);
         document.body.addEventListener("keyup",getKeyEnd);
-
-        function driveCar(e){
-            var y = e.accelerationIncludingGravity.y;
-
-            if(y > 0){
-                if(cx+carW+50 < w) cx += y*ms;
-            }
-            else{
-                if(cx-50 > 0) cx += y*ms;
-            }
-        }
 
         var m = 0;
 
