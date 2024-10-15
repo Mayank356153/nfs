@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <style>
+        body{
+            background-color: black;
+        }
+        h1{
+            position:absolute;
+            top:3rem;
+            color:white;
+            left:13rem;
+            font-size: 5rem;
+        }
+        .blacklist{
+            position:absolute;
+            top:35%;
+            right:20%;
+            width:25%;
+            height:35%;
+        }
+        .car{
+            position:absolute;
+            top:35%;
+            left:20%;
+            width:32%;
+            height:35%;
+        }
+        .msg{
+            color:white;
+            font-size: 2rem;
+            position:absolute;
+            top:70%;
+            left:20%;
+        }
+        button{
+            position:absolute;
+            top:80%;
+            left:45%;
+            font-size: 1.2rem;
+            width:8rem;
+            font-weight: 700;
+            border-radius: 1.5rem;
+            animation-name: flow;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+            margin:2rem;
+        } 
+        @keyframes flow{
+            0%{
+                scale:1.2;
+            }50%{
+                scale:1;
+            }100%{
+                scale:1.2;
+            }
+        }
+    </style>
+    <title>Mach Roader</title>
+</head>
+<body>
+    <div>
+        <h1><span class="name">Name</span> Challenged you for a race</h1>
+        <div>
+            <img class="blacklist" src="../assets/ronnie.png">
+            <img class="car" src="../assets/ronnieCar.png">
+        </div>
+        <p class="msg">I will crush you with the speed of my lambo!!!</p>
+        <button onClick="play()">Accept</button>
+    </div>
+    <script>
+        function play(){
+            window.location.href ="../HTML/game.html";
+        }
+        var speed = Number(localStorage.getItem("bossSpeed"));
+        var level = Number(localStorage.getItem("level"));
+        console.log(level);
+
+        if( level === 1){
+            document.querySelector(".name").innerHTML = "Ronnie";
+            document.querySelector(".msg").innerHTML = "I will crush you with the speed of my lambo!!!";
+
+        }
+        else if( level === 2){
+            console.log("bull");
+            document.querySelector(".name").innerHTML = "Bull";
+            document.querySelector(".msg").innerHTML = "Come on you are no match for me just go home.";
+            document.querySelector(".blacklist").src = "../assets/bull.png";
+            document.querySelector(".car").src = "../assets/bullCar.png";
+            document.querySelector(".blacklist").height = "40%";
+        }else {
+            document.querySelector(".name").innerHTML = "Razor";
+            document.querySelector(".msg").innerHTML = "The Boss is here man!! just back off and never look toward the race track.";
+            document.querySelector(".blacklist").src = "../assets/razor.png";
+            document.querySelector(".car").src = "../assets/razorCar.png";
+        }
+    </script>
+</body>
+</html>
