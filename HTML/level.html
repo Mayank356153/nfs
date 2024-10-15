@@ -8,9 +8,13 @@
         body{
             overflow:hidden;
             background-color: black;
+            background-image: url("../assets/background3.webp");
+            background-repeat: no-repeat;
+            background-attachment: fixed;  
+            background-size: cover;
         }
         h1{
-            color:red;
+            color:#EE82EE;
             font-size: 6rem;
         }
         .win{
@@ -31,10 +35,10 @@
             position:absolute;
             left:45rem;
             top:38rem;
-            height:3rem;
+            height:5rem;
             width:10rem;
             font-size: 1.8rem;
-            background-color: blue;
+            background-color: #800080;
             border-radius:5px;
             animation-name: flow;
             animation-duration: 2s;
@@ -42,11 +46,11 @@
         }
         @keyframes flow{
             0%{
-                scale:1.5;
+                scale:1.18;
             }50%{
                 scale:1;
             }100%{
-                scale:1.5;
+                scale:1.18;
             }
         }
         @keyframes blow{
@@ -59,14 +63,14 @@
             }
         }
     </style>
-    <title>Document</title>
+    <title>Mach Roader</title>
 </head>
 <body>
     
     <div class="win">
         <h1>You defeated the <span class="name">name</span>!!</h1>
     </div>
-    <button onClick="levelUp()">Next Level</button>
+    <button onClick="levelUp()">Next Challenge</button>
 </body>
 <script>
     var speed = Number(localStorage.getItem("bossSpeed"));
@@ -96,7 +100,7 @@
     localStorage.setItem("check",false);
     console.log(speed,level);
     function levelUp(){
-        window.location.href = 'game.html';
+        window.location.href = 'enemy.html';
     }
 </script>
 </html>
