@@ -288,7 +288,6 @@
         
         levelCar.prototype.checkCollisions = function() {
             for (let car of [...cars, ...oppositeCars]) {
-                // Check for collision
                 if (this.isColliding(car)) {
                     this.changeLane();
                     break;
