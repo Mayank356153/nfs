@@ -6,8 +6,8 @@ var acceleration = localStorage.getItem("bossSpeed");
 console.log(level,acceleration);
 localStorage.setItem("check",true);
 console.log()
-document.addEventListener('keypress',function (run){
+document.addEventListener('keypress',function (event){
     if(event.key=='Enter')
-    window.location.href ="../HTML/game.html";
+    window.location.href ="../HTML/start.html";
 });
 
