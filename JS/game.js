@@ -134,7 +134,7 @@
             }
         }  
 
-        var carSrc = [_i("c1"),_i("c2"),_i("c3")];
+        var carSrc = [_i("f1"),_i("f2"),_i("f3")];
 
         var cars = [];
         for(var n = 0; n < ((h*0.7+100)/gameDifficulty); n++){
