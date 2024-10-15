@@ -1,41 +1,75 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Need for Speed</title>
-    
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
+      body {
+        background-image: url("../assets/background.webp");
+        background-repeat: no-repeat;
+        background-attachment: fixed;  
+        background-size: cover;
+      }
+      #gameTitle{
+        color:white;
+      }
+      #startPage{
+        position:absolute;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        top:9rem;
+        left:12rem;
+        gap:2rem;
+        border-radius: 2px solid black;
+      }
+      .gameHome,#gameTitle{
+        font-size: 5rem;
+        font-weight: 700;
+      }
+      button{
+        font-size: 3rem;
+        width:10rem;
+        font-weight: 700;
+        border-radius: 1.5rem;
+        animation-name: flow;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+      }
+      #controler{
+        padding:2rem;
+        border-radius: 4px;
+        backdrop-filter: blur(10px) saturate(70%);
+        position:absolute;
+        top:25rem;
+        left:12rem;
+        font-size: 2rem;
+        color:white;
+      }
+      @keyframes flow{
+            0%{
+                scale:1.5;
+            }50%{
+                scale:1;
+            }100%{
+                scale:1.5;
+            }
         }
-
-        #image {
-            width: 100vw;
-            height: 100vh;
-           
-        }
-
-        #enter {
-            position: absolute;
-            bottom: 5%;
-            width: 100vw; 
-            color: white;
-            font-size: 20px;
-            text-align: center;
-        }
-
-      
     </style>
-</head>
-<body>
-    <img id="image" src="../assets/machine-race-the-game-nfs-need-for-speed-heat-hd-wallpaper-thumb.jpg" alt="Background Image">
-    
-    <div id="enter">
-        <marquee behavior="" direction="right">Press enter to play</marquee>
+    <title>3D Car Drive!</title>
+  </head>
+  <body >
+    <div class="gameHome" id="startPage">
+      <div id="gameTitle">3D Car Drive!</div>
+      <button onClick="play()">Play</button>
     </div>
-
+    <div id="controler">
+      <div id="cnt">D : Increase Speed</div>
+      <div id="cnt">A : Decrease Speed</div>
+      <div id="cnt">left Arrow Key : MoveLeft</div>
+      <div id="cnt">Right Arrow Key : MoveRight</div>
+    </div>
     <script src="../JS/start.js"></script>
-</body>
+  </body>
 </html>

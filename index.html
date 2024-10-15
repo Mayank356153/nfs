@@ -9,33 +9,72 @@
         body {
             margin: 0;
             padding: 0;
-        }
-
-        #image {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover; 
+            background-color: black;
         }
 
         #enter {
             position: absolute;
-            bottom: 5%;
+            top:70%;
             width: 100vw; 
-            color: white;
-            font-size: 20px;
             text-align: center;
+            animation-name: blow;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes blow{
+            0%{
+                opacity: 0;
+            }50%{
+                opacity: 1;
+            }100%{
+                opacity: 0;
+            }
+        }
+        #go{
+            color: greenyellow;
+            font-style: italic;
+            text-transform: capitalize;
+            text-decoration: underline;
+            font-size: 2.2rem;
+        }
+        #name{
+            color:green;
+            text-shadow: 8px 8px 6px greenyellow;
+            position:absolute;
+            top:25%;
+            left:25%;
+            font-size: 4rem;
+        }
+        #n1{
+            animation-name: mleft;
+            animation-duration: 1s;
+            animation-iteration-count: 1;
+        }
+        #n2{
+            animation-name: mright;
+            animation-duration: 1s;
+            animation-iteration-count: 1;
         }
 
+        @keyframes identifier {
+            from{
+                left:-10rem;
+            }
+            to{
+                left:0;
+            }
+        }
       
     </style>
 </head>
 <body>
-    <img id="image" src="../assets/machine-race-the-game-nfs-need-for-speed-heat-hd-wallpaper-thumb.jpg" alt="Background Image">
-    
+    <div id ="name">
+        <h1><span id="n1">Mach</span> <span id="n2">Roader</span></h1>
+    </div>
     <div id="enter">
-        <marquee behavior="" direction="right">Press enter to play</marquee>
+        <div id="go"><i>Press enter to play</i></div>
     </div>
 
-    <script src="../JS/index.js"></script>
+    <script src="./JS/index.js"></script>
 </body>
 </html>
